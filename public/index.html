@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moment Blog Auditor</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <div>
+      <div class="logo serif">Moment Blog Auditor</div>
+      <div class="kicker">SEO + Checklist Engine</div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="audit">Run Audit</button>
+      <button class="tab" data-tab="dash">Owner Dashboard</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- AUDIT VIEW -->
+  <section id="view-audit">
+    <div class="modes">
+      <button class="mode active" data-mode="url">Published URL</button>
+      <button class="mode" data-mode="draft">Paste a draft</button>
+    </div>
+
+    <div class="inputs">
+      <input id="writer" class="field" placeholder="Your name (for the dashboard)">
+      <div id="urlBox">
+        <input id="url" class="field" placeholder="https://www.momentprivatewealth.com/post/...">
+      </div>
+      <div id="draftBox" class="hidden">
+        <input id="draftTitle" class="field" placeholder="Post title / headline">
+        <textarea id="draftHtml" class="field" rows="9" placeholder="Paste your draft here — HTML from Wix is best (keeps links & headings), but plain text works too."></textarea>
+      </div>
+      <button id="run" class="btn">Run audit &rarr;</button>
+    </div>
+
+    <div id="status" class="note hidden"></div>
+    <div id="results" class="hidden"></div>
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section id="view-dash" class="hidden">
+    <h2 class="serif h2">Team accountability — at a glance</h2>
+    <p class="sub">Every run lands here automatically. The team gets instant feedback; you get visibility without doing the checks yourself.</p>
+    <div id="stats" class="stats"></div>
+    <div id="runs" class="card"></div>
+  </section>
+</main>
+
+<footer class="wrap foot">Prototype build · Steps 1–2 live · Claude layer (Step 3) activates by adding an API key · Search Console (Step 4) &amp; Wix (Step 5) wire in later.</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

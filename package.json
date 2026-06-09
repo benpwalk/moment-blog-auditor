@@ -1,0 +1,16 @@
+{
+  "name": "moment-blog-auditor",
+  "version": "1.0.0",
+  "description": "Self-serve SEO + checklist auditor for the Moment Private Wealth blog",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node src/smoketest.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.19.2"
+  },
+  "engines": { "node": ">=18" }
+}
