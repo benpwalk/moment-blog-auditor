@@ -38,14 +38,14 @@ app.post("/api/audit", async (req, res) => {
 
     const parsed = parseHtml(pageHtml, sourceUrl);
     const match = matchPost({ url: mode === "url" ? url : "", title: title || parsed.h1 || parsed.titleTag });
-    const fullText = parsed.introText + " " + (parsed.faqQuestions || []).join(" ") + " " + pageHtml.replace(/<[^>]+>/g, " ");
+    const fullText = [parsed.introText, (parsed.faqQuestions || []).join(" "), parsed.bodyText].join(" ");
 
     const qualitative = await analyzeQualitative({
       keyword: match.post?.keyword,
       cluster: match.post?.cluster,
       faqQuestions: parsed.faqQuestions,
       introText: parsed.introText,
-      bodyText: pageHtml.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 6000),
+      bodyText: parsed.bodyText,
     });
 
     const result = score({ parsed, match, fullText, qualitative, mode });

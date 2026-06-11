@@ -41,7 +41,11 @@ export function parseHtml(html, sourceUrl = "") {
   });
   introText = firstParas.join(" ");
 
-  const fullText = $body.text().replace(/\s+/g, " ").trim();
+  // Clean copy of the body with code/styles stripped, so script contents
+  // (e.g. Wix's inline JS/JSON) never pollute the readable article text.
+  const $clean = $body.clone();
+  $clean.find("script, style, noscript").remove();
+  const fullText = $clean.text().replace(/\s+/g, " ").trim();
   const totalWords = wordCount(fullText);
 
   const hasBold = $body.find("strong, b").length > 0;
@@ -121,6 +125,7 @@ export function parseHtml(html, sourceUrl = "") {
     modifiedTime,
     introText,
     introWordCount: wordCount(introText),
+    bodyText: fullText.slice(0, 8000),
     totalWords,
     readMinutes: Math.max(1, Math.round(totalWords / 200)),
     hasBold,
