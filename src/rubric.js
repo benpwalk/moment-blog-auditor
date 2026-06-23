@@ -22,7 +22,7 @@ const DIMENSIONS = [
   { key: "Performance", weight: 10 },
 ];
 
-export function score({ parsed, match, fullText = "", qualitative = null, mode = "url" }) {
+export function score({ parsed, match, fullText = "", qualitative = null, performance = null, mode = "url" }) {
   const post = match.post;
   const keyword = post ? post.keyword : null;
   const pillar = isPillar(post);
@@ -164,8 +164,27 @@ export function score({ parsed, match, fullText = "", qualitative = null, mode =
   }
 
   /* ---------- Performance ---------- */
-  add("Performance", "Live keyword rank, impressions & CTR", "pending",
-    "Connect Google Search Console (Step 4) to score real performance.");
+  const gsc = performance;
+  if (mode !== "url") {
+    add("Performance", "Live keyword rank, impressions & CTR", "pending",
+      "Performance data only applies to published URLs — re-audit the live post once it's published.");
+  } else if (!gsc) {
+    add("Performance", "Live keyword rank, impressions & CTR", "pending",
+      "Search Console isn't configured for this run — see GSC_SITE_URL / GSC_KEY_PATH in .env.");
+  } else if (gsc.error) {
+    add("Performance", "Live keyword rank, impressions & CTR", "pending",
+      `Search Console lookup failed (${gsc.error}) — falling back to pending.`);
+  } else if (!gsc.found) {
+    add("Performance", "Live keyword rank, impressions & CTR", "warn",
+      `No clicks or impressions found in Search Console between ${gsc.startDate} and ${gsc.endDate}. This usually means the post is too new to have data yet, isn't indexed, or isn't ranking for any query.`,
+      "Give it more time to index, or check it's submitted/linked properly in Search Console.");
+  } else {
+    const pos = gsc.avgPosition;
+    const status = pos <= 20 ? "pass" : pos <= 50 ? "warn" : "fail";
+    add("Performance", "Live keyword rank, impressions & CTR", status,
+      `Top query "${gsc.topQuery}" averages position ${pos.toFixed(1)}. ${gsc.impressions} impressions, ${gsc.clicks} clicks, ${(gsc.ctr * 100).toFixed(1)}% CTR (${gsc.startDate} to ${gsc.endDate}).`,
+      status === "pass" ? null : "Improve on-page relevance and internal linking to climb in rank for this query.");
+  }
 
   /* ---------- Roll up ---------- */
   const dims = DIMENSIONS.map((d) => {
